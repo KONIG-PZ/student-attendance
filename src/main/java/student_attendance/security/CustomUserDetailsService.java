@@ -18,24 +18,30 @@ public class CustomUserDetailsService
     public CustomUserDetailsService(
             UserAccountRepository userAccountRepository) {
 
-        this.userAccountRepository = userAccountRepository;
+        this.userAccountRepository =
+                userAccountRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username)
+    public UserDetails loadUserByUsername(
+            String username)
             throws UsernameNotFoundException {
 
-        UserAccount user = userAccountRepository
-                .findByUsername(username)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(
-                                "User not found"
-                        ));
+        UserAccount user =
+                userAccountRepository
+                        .findByUsername(username)
+                        .orElseThrow(() ->
+                                new UsernameNotFoundException(
+                                        "User not found"
+                                ));
 
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
+
+                // VERY IMPORTANT
                 .roles(user.getRole().name())
+
                 .disabled(!user.isActive())
                 .build();
     }

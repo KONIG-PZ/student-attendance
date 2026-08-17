@@ -33,21 +33,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
 
+        // Get Authorization header
         final String authHeader =
                 request.getHeader("Authorization");
 
-        // No Authorization header
-        if (authHeader == null
-                || !authHeader.startsWith("Bearer ")) {
-
+        //No Authorization header
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         // Extract JWT
-        String jwt = authHeader.substring(7);
+        final String jwt =
+                authHeader.substring(7);
 
         String username;
 
@@ -61,20 +61,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Check if user is already authenticated
+        // Check if user isn't already authenticated
         if (username != null
                 && SecurityContextHolder
                 .getContext()
                 .getAuthentication() == null) {
 
-            UserDetails userDetails =
-                    userDetailsService
-                            .loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService
+                    .loadUserByUsername(username);
 
-            // Validate token
+            //Validate JWT
             if (jwtService.isTokenValid(
                     jwt,
-                    userDetails)) {
+                    userDetails)){
 
                 UsernamePasswordAuthenticationToken
                         authentication =
@@ -91,10 +90,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder
                         .getContext()
-                        .setAuthentication(authentication);
+                        .setAuthentication(
+                                authentication
+                        );
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }
