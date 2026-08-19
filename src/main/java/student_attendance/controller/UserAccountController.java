@@ -21,12 +21,10 @@ public class UserAccountController {
         this.userAccountService = userAccountService;
     }
 
-    // ============================
     // CREATE USER
-    // ============================
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(
+    public ResponseEntity<?> createUser(
             @RequestBody UserAccount user) {
 
         try {
@@ -38,13 +36,13 @@ public class UserAccountController {
 
         } catch (RuntimeException e) {
 
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
     }
 
-    // ============================
     // GET ALL USERS
-    // ============================
 
     @GetMapping
     public List<UserDTO> getAllUsers() {
@@ -52,9 +50,7 @@ public class UserAccountController {
         return userAccountService.getAllUsers();
     }
 
-    // ============================
     // GET USER BY ID
-    // ============================
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(
@@ -72,9 +68,7 @@ public class UserAccountController {
         }
     }
 
-    // ============================
     // UPDATE USER
-    // ============================
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(
@@ -113,9 +107,7 @@ public class UserAccountController {
         }
     }
 
-    // ============================
     // DELETE USER
-    // ============================
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(
