@@ -14,7 +14,7 @@ public class SectionService {
 
     private final SectionRepository sectionRepository;
 
-    // Get all Sections
+    // Get all Sections+
     public List<Section> getAllSections() {
         return sectionRepository.findAll();
     }
@@ -27,7 +27,7 @@ public class SectionService {
     //Add Section
     public Section addSection(Section section){
         return sectionRepository.save(section);
-    };
+    }
 
     //Update Section
     public Section updateSection(int id, Section sectionDetails){
