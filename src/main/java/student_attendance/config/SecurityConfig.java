@@ -33,7 +33,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http){
+            HttpSecurity http) throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/**")
                         .hasRole("SUPER_ADMIN")
 
-                        // Everything els
+                        // Everything else
                         .anyRequest()
                         .authenticated()
                 )
@@ -87,7 +87,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration)
-             {
+            throws Exception {
 
         return configuration.getAuthenticationManager();
     }
