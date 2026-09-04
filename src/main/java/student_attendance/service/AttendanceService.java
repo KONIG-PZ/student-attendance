@@ -18,6 +18,9 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final StudentRepository studentRepository;
 
+    // Time-in after this cutoff is marked LATE instead of PRESENT.
+    private static final LocalTime LATE_CUTOFF = LocalTime.of(8, 0);
+
     public AttendanceService(
             AttendanceRepository attendanceRepository,
             StudentRepository studentRepository) {
@@ -60,7 +63,9 @@ public class AttendanceService {
             attendance.setStudent(student);
             attendance.setDate(today);
             attendance.setTimeIn(currentTime);
-            attendance.setStatus("PRESENT");
+            attendance.setStatus(
+                    currentTime.isAfter(LATE_CUTOFF) ? "LATE" : "PRESENT"
+            );
 
             Attendance savedAttendance =
                     attendanceRepository.save(attendance);
@@ -112,7 +117,6 @@ public class AttendanceService {
 
     // GET ATTENDANCE BY DATE
 
-
     public List<AttendanceDTO> getAttendanceByDate(LocalDate date) {
 
         return attendanceRepository
@@ -121,7 +125,6 @@ public class AttendanceService {
                 .map(this::convertToDTO)
                 .toList();
     }
-
 
     // GET STUDENT ATTENDANCE
 
