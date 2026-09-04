@@ -27,9 +27,7 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-    // ============================
     // SECURITY FILTER CHAIN
-    // ============================
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -51,17 +49,33 @@ public class SecurityConfig {
                         .requestMatchers("/api/attendance/**")
                         .hasAnyRole("TEACHER", "SUPER_ADMIN")
 
-                        .requestMatchers("/api/sections/**")
+                        // Sections: Teachers can view, only Super Admin can create/edit/delete
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/sections/**")
                         .hasAnyRole("TEACHER", "SUPER_ADMIN")
+
+                        .requestMatchers("/api/sections/**")
+                        .hasRole("SUPER_ADMIN")
+
+                        // Reports: viewable by Teacher and Super Admin
+                        .requestMatchers("/api/reports/**")
+                        .hasAnyRole("TEACHER", "SUPER_ADMIN")
+
+                        // Teacher-only self-service endpoints
+                        .requestMatchers("/api/teacher/**")
+                        .hasRole("TEACHER")
 
                         // Super Admin only
                         .requestMatchers("/api/users/**")
+                        .hasRole("SUPER_ADMIN")
+
+                        .requestMatchers("/api/admin/**")
                         .hasRole("SUPER_ADMIN")
 
                         // Everything else
                         .anyRequest()
                         .authenticated()
                 )
+
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
@@ -69,10 +83,8 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    // ============================
+    
     // PASSWORD ENCODER
-    // ============================
 
     @Bean
     public PasswordEncoder passwordEncoder() {

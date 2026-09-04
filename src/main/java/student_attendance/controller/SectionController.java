@@ -34,28 +34,57 @@ public class SectionController {
 
     // CREATE section
     @PostMapping
-    public ResponseEntity<Section> addSection(@RequestBody Section sectionDetails){
-        return ResponseEntity.ok(sectionService.addSection(sectionDetails));
+    public ResponseEntity<?> addSection(@RequestBody Section sectionDetails) {
+        try {
+            return ResponseEntity.ok(sectionService.addSection(sectionDetails));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     // UPDATE section
     @PutMapping("/{id}")
-    public ResponseEntity<Section> updateSection(
+    public ResponseEntity<?> updateSection(
             @PathVariable int id,
-            @RequestBody Section sectionDetails){
+            @RequestBody Section sectionDetails) {
 
-        return ResponseEntity.ok(
-                sectionService.updateSection(id, sectionDetails)
-        );
+        try {
+            return ResponseEntity.ok(sectionService.updateSection(id, sectionDetails));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     // Delete section
     @DeleteMapping("/{id}")
-    public  ResponseEntity<Void> deleteSection(@PathVariable int id){
+    public ResponseEntity<?> deleteSection(@PathVariable int id) {
+        try {
+            sectionService.deleteSection(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    // POST - Assign a teacher to a section
+    @PostMapping("/{sectionId}/teachers/{teacherId}")
+    public ResponseEntity<?> assignTeacher(@PathVariable int sectionId, @PathVariable Long teacherId) {
+        try {
+            Section updated = sectionService.assignTeacherToSection(sectionId, teacherId);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
-        sectionService.deleteSection(id);
-
-        return ResponseEntity.noContent().build();
+    // DELETE - Remove a teacher from a section
+    @DeleteMapping("/{sectionId}/teachers/{teacherId}")
+    public ResponseEntity<?> removeTeacher(@PathVariable int sectionId, @PathVariable Long teacherId) {
+        try {
+            Section updated = sectionService.removeTeacherFromSection(sectionId, teacherId);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

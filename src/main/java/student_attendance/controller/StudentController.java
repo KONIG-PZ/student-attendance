@@ -63,4 +63,26 @@ public class StudentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // PUT - Assign a student to a section
+    @PutMapping("/{studentId}/section/{sectionId}")
+    public ResponseEntity<?> assignSection(@PathVariable Long studentId, @PathVariable int sectionId) {
+        try {
+            Student updated = studentService.assignSectionToStudent(studentId, sectionId);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // DELETE - Remove a student's section
+    @DeleteMapping("/{studentId}/section")
+    public ResponseEntity<?> removeSection(@PathVariable Long studentId) {
+        try {
+            Student updated = studentService.removeSectionFromStudent(studentId);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

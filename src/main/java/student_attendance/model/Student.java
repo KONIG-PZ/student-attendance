@@ -1,5 +1,6 @@
 package student_attendance.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,11 @@ public class Student {
     private String email;
     private String course;
     private String yearLevel;
-    private String section;
+
+    @ManyToOne
+    @JoinColumn(name = "section_id", nullable = true)
+    @JsonIgnoreProperties({"teachers"})
+    private Section section;
 
     private String qrCode;
 
