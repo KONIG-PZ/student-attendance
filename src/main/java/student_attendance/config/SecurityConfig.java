@@ -33,7 +33,9 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    // ============================
     // SECURITY FILTER CHAIN
+    // ============================
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -93,7 +95,31 @@ public class SecurityConfig {
     }
 
     // ============================
+    // CORS CONFIGURATION
+    // ============================
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Allow the Vite dev server origin. Add more origins here later
+        // (e.g. your deployed frontend URL) as needed.
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
+    // ============================
     // PASSWORD ENCODER
+    // ============================
 
     @Bean
     public PasswordEncoder passwordEncoder() {

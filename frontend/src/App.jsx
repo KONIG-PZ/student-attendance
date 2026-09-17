@@ -4,6 +4,7 @@ import Home from "./Home";
 import Scanner from "./Scanner";
 import MySections from "./MySections";
 import AdminOverview from "./AdminOverview";
+import Sections from "./Sections";
 
 function isLoggedIn() {
   return !!localStorage.getItem("token");
@@ -18,6 +19,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+
         <Route
           path="/"
           element={
@@ -26,6 +28,7 @@ function App() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/scanner"
           element={
@@ -34,6 +37,7 @@ function App() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/my-sections"
           element={
@@ -42,11 +46,21 @@ function App() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/admin-overview"
           element={
             <PrivateRoute>
               <AdminOverview />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/sections"
+          element={
+            <PrivateRoute>
+              <Sections />
             </PrivateRoute>
           }
         />
